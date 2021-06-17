@@ -49,5 +49,20 @@ export class PostResolver{
 		return queryPost;
 	}
 
+	@Mutation(() => Boolean)
+	async deletePost(
+		@Arg('id') id: number,
+		@Ctx() {em}: MyContext
+		): Promise<boolean>{
+
+		let queryPost = await em.findOne(Post, {id: id})
+		console.log(queryPost)
+		if (!queryPost){
+			return false
+		}
+		await em.nativeDelete(Post, {id: id})
+		return true;
+	}
+
 
 }
