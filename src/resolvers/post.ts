@@ -30,6 +30,24 @@ export class PostResolver{
 		return post;
 	}
 
+	@Mutation(() => Post, {nullable: true})
+	async updatePost(
+		@Arg('id') id: number,
+		@Arg('title') title: string,
+		@Ctx() {em}: MyContext
+		): Promise<Post | null>{
+
+
+		const queryPost = await em.findOne(Post, {id: id})
+		if (!queryPost){
+			return null
+		}
+		if (typeof title !== undefined){
+			queryPost.title = title
+			await em.persistAndFlush(queryPost)
+		}
+		return queryPost;
+	}
 
 
 }
