@@ -41,16 +41,53 @@ class FieldError {
 @Resolver()
 export class UserResolver{
 
-	@Mutation(() => User)
+	@Mutation(() => UserResponse)
 	async register(
 		@Arg('options') options: UsernamePasswordInput,
 		@Ctx() { em }: MyContext
-	){
+	): Promise<UserResponse>{
+
+		if (options.username.length <= 2){
+			return {
+				errors: [{
+					field: "username",
+					message: "Username too short, please make your username name more than 2"
+				}]
+			}
+		}
+		if (options.password.length <= 2){
+			return {
+				errors: [{
+					field: "password",
+					message: "Password too short, please make your password name more than 2"
+				}]
+			}
+		}
+
+		const doesExist = (await em.findOne(User, {username: options.username}))
+		if (doesExist){
+			return {
+				errors: [{
+					field: "username",
+					message: "Username is taken"
+				}]
+			}
+		}
+
+
+
 		const hashedPassword = await argon2.hash(options.password)
-		const user = em.create(User, {username: options.password, password: hashedPassword})
+		const user = em.create(User, {username: options.username, password: hashedPassword})
 		await em.persistAndFlush(user)
-		return user
+		return {
+			user: user
+		}
 	}
+
+
+
+
+
 
 	@Mutation(() => UserResponse)
 	async login(
