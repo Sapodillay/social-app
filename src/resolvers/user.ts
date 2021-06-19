@@ -78,9 +78,20 @@ export class UserResolver{
 
 		const hashedPassword = await argon2.hash(options.password)
 		const user = em.create(User, {username: options.username, password: hashedPassword})
+
+		try{
 		await em.persistAndFlush(user)
 		return {
 			user: user
+		}
+		}catch(err){
+			console.error(err)
+			return {
+				errors: [{
+					field: "username",
+					message: "a server error occured",
+				}]
+			}
 		}
 	}
 
