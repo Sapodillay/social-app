@@ -31,6 +31,7 @@ const main = async () => {
 					 disableTouch: true
 				}
 			),
+			saveUninitialized: false,
 			secret: "dwadwadhjyrdgsfddwadesecretadewadwadaw",
 			resave: false,
 			cookie: {
