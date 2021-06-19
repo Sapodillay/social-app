@@ -7,6 +7,13 @@ import {buildSchema} from 'type-graphql';
 import { HelloResolver } from './resolvers/hello';
 import { PostResolver } from './resolvers/post';
 import { UserResolver } from './resolvers/user';
+import redis from 'redis';
+import session from 'express-session';
+import connectRedis from 'connect-redis';
+import { Http2ServerResponse } from 'http2';
+
+const RedisStore = connectRedis(session)
+const redisClient = redis.createClient()
 
 
 const main = async () => {
@@ -14,6 +21,30 @@ const main = async () => {
 	orm.getMigrator().up();
 	
 	const app = express();
+
+	const RedisStore = connectRedis(session)
+	const redisClient = redis.createClient()
+
+	app.use(
+		session({
+			name: 'qid',
+			store: new RedisStore(
+				{ 
+					client: redisClient,
+					 disableTouch: true
+				}
+			),
+			secret: "dwadwadhjyrdgsfddwadesecretadewadwadaw",
+			resave: false,
+			cookie: {
+				maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Days
+				httpOnly: true,
+				sameSite: 'lax',
+				secure: false
+			}
+		})
+	)
+
 
 	const apolloServer = new ApolloServer({
 		schema: await buildSchema({
