@@ -10,11 +10,7 @@ import { UserResolver } from './resolvers/user';
 import redis from 'redis';
 import session from 'express-session';
 import connectRedis from 'connect-redis';
-import { Http2ServerResponse } from 'http2';
 import { MyContext } from './types';
-
-const RedisStore = connectRedis(session)
-const redisClient = redis.createClient()
 
 
 const main = async () => {
