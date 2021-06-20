@@ -1,2 +1,4 @@
 node_modules
 dist
+src/migrations/Migration20210616140243.ts
+src/migrations/Migration20210618134254.ts
