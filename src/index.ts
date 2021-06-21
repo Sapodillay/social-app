@@ -53,10 +53,10 @@ const main = async () => {
 		context: ({req, res}): MyContext => ({ em: orm.em, req, res })
 	})
 
-	apolloServer.applyMiddleware({app})
+	apolloServer.applyMiddleware({app, cors: {origin: "http:/localhost:3000"}})
 
-	app.listen(3000, () => {
-		console.log("Server listening on localhost:3000")
+	app.listen(4000, () => {
+		console.log("Server listening on localhost:4000")
 	})
 
 	// const post = orm.em.create(Post, {title: "first post"});
